@@ -67,8 +67,8 @@ func TestGetPolicy_CacheHit_ReturnsCachedPolicy(t *testing.T) {
 		Input:     map[string]interface{}{"score": 750},
 	}
 	req2 := &InferenceRequest{
-		PolicyDOT: dotString,                            // Mesmo DOT
-		Input:     map[string]interface{}{"score": 800}, // Input diferente
+		PolicyDOT: dotString,
+		Input:     map[string]interface{}{"score": 800},
 	}
 
 	// Act
