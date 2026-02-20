@@ -381,7 +381,7 @@ func TestApplyResult_ShouldIgnoreOddNumberOfValues(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, true, output["approved"])
-	assert.Len(t, output, 1) // "segment" without = is ignored
+	assert.Len(t, output, 1)
 }
 
 func TestApplyResult_ShouldApplyMixedTypes(t *testing.T) {
@@ -397,7 +397,7 @@ func TestApplyResult_ShouldApplyMixedTypes(t *testing.T) {
 	assert.Equal(t, true, output["approved"])
 	assert.Equal(t, false, output["rejected"])
 	assert.Equal(t, "gold", output["tier"])
-	assert.Equal(t, "42", output["count"]) // Numbers stored as strings
+	assert.Equal(t, "42", output["count"])
 	assert.Len(t, output, 4)
 }
 
@@ -429,7 +429,7 @@ func TestApplyResult_ShouldHandleSingleComma(t *testing.T) {
 	service.applyResult(",", output)
 
 	// Assert
-	assert.Len(t, output, 0) // Single comma is ignored
+	assert.Len(t, output, 0)
 }
 
 func TestApplyResult_ShouldHandleEmptyValues(t *testing.T) {
@@ -442,7 +442,7 @@ func TestApplyResult_ShouldHandleEmptyValues(t *testing.T) {
 	service.applyResult("key1=,key2=value2", output)
 
 	// Assert
-	assert.Equal(t, "", output["key1"]) // Empty string value
+	assert.Equal(t, "", output["key1"])
 	assert.Equal(t, "value2", output["key2"])
 	assert.Len(t, output, 2)
 }
