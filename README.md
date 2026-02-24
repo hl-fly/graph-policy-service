@@ -286,6 +286,32 @@ Configure no arquivo `.env` na raiz do projeto.
 
 ---
 
+## Testes Unitários e Benchmarks
+
+O projeto possui cobertura completa de testes unitários em três níveis: **model**, **handler** e **service**, além de benchmarks de performance.
+
+### Estrutura dos Testes
+
+Seguimos o padrão **AAA (Arrange, Act, Assert)**:
+
+```go
+func TestExecuteInference_ShouldApproveWhenAgeAndScoreValid(t *testing.T) {
+    // Arrange - Preparar dados e dependências
+    logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+    service := NewInferenceService(logger)
+    policy := &entity.Policy{ /* ... */ }
+
+    // Act - Executar a ação
+    output, err := service.ExecuteInference(policy, input)
+
+    // Assert - Validar resultados
+    require.NoError(t, err)
+    assert.Equal(t, true, output["approved"])
+}
+```
+
+---
+
 ## Exemplos Adicionais
 
 ### Exemplo 2: Aprovação simples
