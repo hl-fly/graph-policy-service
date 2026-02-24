@@ -46,8 +46,8 @@ curl -X POST http://localhost:8080/infer \
   "output": {
     "age": 25,
     "score": 720,
-    "approved": false,
-    "segment": "manual"
+    "approved": true,
+    "segment": "prime"
   }
 }
 ```
