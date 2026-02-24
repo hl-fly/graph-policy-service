@@ -15,7 +15,7 @@ func LoadConfigs(logger *slog.Logger) *Config {
 
 	var config Config
 
-	config.Server.Adders = getEnv(logger, "SERVER_ADDRESS")
+	config.Server.Address = getEnv(logger, "SERVER_ADDRESS")
 
 	return &config
 }

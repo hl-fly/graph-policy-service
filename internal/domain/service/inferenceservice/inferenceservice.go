@@ -49,6 +49,7 @@ func (s *inferenceService) ExecuteInference(policy *entity.Policy, input map[str
 
 			result, err := expr.Run(edge.Program, output)
 			if err != nil {
+				s.logger.Error("Error evaluating edge program.", "error", err)
 				return nil, err
 			}
 

@@ -5,5 +5,5 @@ type Config struct {
 }
 
 type Server struct {
-	Adders string
+	Address string
 }

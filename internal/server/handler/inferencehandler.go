@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/go-chi/chi/v5/middleware"
 	lru "github.com/hashicorp/golang-lru/v2"
 	"github.com/hector-leite/graph-policy-service/internal/domain/entity"
 	"github.com/hector-leite/graph-policy-service/internal/domain/service/inferenceservice"
@@ -30,10 +31,12 @@ func NewInferenceHandler(
 }
 
 func (h *InferenceHandler) ExecuteInference(w http.ResponseWriter, r *http.Request) {
+	requestID := middleware.GetReqID(r.Context())
+
 	var req model.InferenceRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		h.logger.Error("Error decoding request body.", "error", err)
+		h.logger.Error("Error decoding request body.", "request_id", requestID, "error", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"result":  "invalid request body",
@@ -44,7 +47,7 @@ func (h *InferenceHandler) ExecuteInference(w http.ResponseWriter, r *http.Reque
 
 	policy, err := req.GetPolicy(h.policyCache)
 	if err != nil {
-		h.logger.Error("Error parsing policy DOT.", "error", err)
+		h.logger.Error("Error parsing policy DOT.", "request_id", requestID, "error", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"result":  "invalid policy DOT",
@@ -55,7 +58,7 @@ func (h *InferenceHandler) ExecuteInference(w http.ResponseWriter, r *http.Reque
 
 	res, err := h.inferenceService.ExecuteInference(policy, req.Input)
 	if err != nil {
-		h.logger.Error("Error executing inference.", "error", err)
+		h.logger.Error("Error executing inference.", "request_id", requestID, "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"result":  "inference execution error",
@@ -63,6 +66,8 @@ func (h *InferenceHandler) ExecuteInference(w http.ResponseWriter, r *http.Reque
 		})
 		return
 	}
+
+	h.logger.Info("Inference executed successfully.", "request_id", requestID)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
